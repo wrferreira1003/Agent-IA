@@ -2,6 +2,17 @@ import notion_client
 from app.core.config import settings
 import google.generativeai as genai
 
+# Caso a biblioteca do Google não esteja instalada (ex.: ambiente de testes),
+# definimos decoradores "fake" para evitar erros de importação.
+try:
+    tool_decorator = genai.tools.text  # Decorador oficial para funções de texto
+except Exception:  # pragma: no cover - fallback para ambientes sem a lib
+    class _DummyDecorator:  # simples no-op
+        def __call__(self, func):
+            return func
+
+    tool_decorator = _DummyDecorator()
+
 # Inicializa o cliente do Notion de forma síncrona
 # Para uso em um ambiente assíncrono, considere rodar em um executor de thread
 notion = notion_client.Client(auth=settings.NOTION_API_KEY)
@@ -119,6 +130,7 @@ def read_notion_page() -> str:
                f"2. As permissões foram definidas como 'Full access' ou 'Edit'\n" \
                f"3. A página está acessível: https://www.notion.so/REST-API-s-com-Django-Ninja-f75599ed25fa404dac7b7ae4ba84830b"
 
+@tool_decorator
 def create_notion_page(title: str, content: str) -> str:
     """
     Cria uma nova página em um banco de dados específico do Notion.
@@ -132,6 +144,7 @@ def create_notion_page(title: str, content: str) -> str:
     """
     return create_notion_page_impl(title, content)
 
+@tool_decorator
 def search_notion_pages() -> str:
     """
     Lê e exibe o conteúdo da página do Notion (REST API's com Django Ninja).
