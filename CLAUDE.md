@@ -22,8 +22,34 @@ The application uses PostgreSQL with SQLAlchemy. Database configuration is handl
 ### Environment Variables
 Create a `.env` file with:
 ```
+DATABASE_URL=postgresql+asyncpg://ia_user:secret@localhost/ia_memory
 GOOGLE_API_KEY=your_google_api_key_here
+NOTION_API_KEY=your_notion_api_key_here
+NOTION_DATABASE_ID=your_notion_database_id_here
 ```
+
+### Testing
+Run tests with pytest:
+```bash
+# Install test dependencies
+pip install pytest pytest-asyncio aiosqlite
+
+# Run all tests
+pytest
+
+# Run specific test files
+pytest tests/test_basic.py -v
+
+# Run tests with coverage (optional)
+pytest --cov=app tests/
+```
+
+Test Structure:
+- `tests/test_basic.py`: Basic functionality tests
+- `tests/test_config.py`: Configuration tests
+- `tests/test_logger.py`: Logging system tests
+- `tests/test_handlers.py`: Business logic tests
+- `tests/test_agents.py`: AI agent functionality tests
 
 ## Architecture Overview
 
