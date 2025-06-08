@@ -1,17 +1,16 @@
 import notion_client
 from app.core.config import settings
-import google.generativeai as genai
 
 # Caso a biblioteca do Google não esteja instalada (ex.: ambiente de testes),
 # definimos decoradores "fake" para evitar erros de importação.
 try:
-    tool_decorator = genai.tools.text  # Decorador oficial para funções de texto
-except Exception:  # pragma: no cover - fallback para ambientes sem a lib
-    class _DummyDecorator:  # simples no-op
-        def __call__(self, func):
-            return func
-
-    tool_decorator = _DummyDecorator()
+    import google.generativeai as genai
+    # Como a versão atual do genai não tem tools.text, usamos um decorador simples
+    def tool_decorator(func):
+        return func
+except ImportError:  # pragma: no cover - fallback para ambientes sem a lib
+    def tool_decorator(func):
+        return func
 
 # Inicializa o cliente do Notion de forma síncrona
 # Para uso em um ambiente assíncrono, considere rodar em um executor de thread
