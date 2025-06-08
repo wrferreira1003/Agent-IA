@@ -1,0 +1,188 @@
+### Capitão IA - Advanced HTTP Tests
+### Advanced testing scenarios for edge cases and performance
+
+### Variables
+@baseUrl = http://localhost:8000
+@contentType = application/json
+
+### Stress Testing - Long Question
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 999,
+  "pergunta": "Esta é uma pergunta muito longa para testar como o sistema lida com inputs extensos. 
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et 
+  dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip 
+  ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
+  eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Qual é a resposta para esta pergunta complexa?"
+}
+
+###
+
+### Special Characters Test
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 888,
+  "pergunta": "Teste com caracteres especiais: áàâãéèêíìîóòôõúùûç ñ ¿¡ €$£¥ 中文 🚀 💻 ✨"
+}
+
+###
+
+### SQL Injection Attempt (Should be safely handled)
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 777,
+  "pergunta": "'; DROP TABLE mensagens; --"
+}
+
+###
+
+### XSS Attempt (Should be safely handled)
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 666,
+  "pergunta": "<script>alert('xss')</script>"
+}
+
+###
+
+### Large Client ID Test
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 999999999,
+  "pergunta": "Cliente com ID muito grande"
+}
+
+###
+
+### Negative Client ID Test
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": -1,
+  "pergunta": "Cliente com ID negativo"
+}
+
+###
+
+### Zero Client ID Test
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 0,
+  "pergunta": "Cliente com ID zero"
+}
+
+###
+
+### Unicode Emoji Test
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 555,
+  "pergunta": "Olá! 👋 Como você está? 😊 Pode me ajudar com alguns tickets? 🎫 Obrigado! 🙏"
+}
+
+###
+
+### JSON with Extra Fields (Should ignore extra fields)
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 444,
+  "pergunta": "Pergunta normal",
+  "extra_field": "Este campo deveria ser ignorado",
+  "another_field": 123
+}
+
+###
+
+### Tickets Summary with Large Client ID
+GET {{baseUrl}}/api/v1/resumo_tickets?cliente_id=999999999
+Accept: application/json
+
+###
+
+### Tickets Summary with Zero Client ID
+GET {{baseUrl}}/api/v1/resumo_tickets?cliente_id=0
+Accept: application/json
+
+###
+
+### Tickets Summary with Negative Client ID
+GET {{baseUrl}}/api/v1/resumo_tickets?cliente_id=-1
+Accept: application/json
+
+###
+
+### Multiple Query Parameters (Should use only cliente_id)
+GET {{baseUrl}}/api/v1/resumo_tickets?cliente_id=333&extra_param=ignored&another=value
+Accept: application/json
+
+###
+
+### Performance Test - Rapid Fire Requests
+### Execute these quickly to test concurrent handling
+
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1001,
+  "pergunta": "Pergunta 1"
+}
+
+###
+
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1002,
+  "pergunta": "Pergunta 2"
+}
+
+###
+
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1003,
+  "pergunta": "Pergunta 3"
+}
+
+###
+
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1004,
+  "pergunta": "Pergunta 4"
+}
+
+###
+
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1005,
+  "pergunta": "Pergunta 5"
+}
+
+###

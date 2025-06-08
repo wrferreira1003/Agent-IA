@@ -4,7 +4,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app.db.models import Base  # importa o Base com os models
-from app.db.database import engine
+from app.core.config import settings
 
 target_metadata = Base.metadata
 
@@ -66,11 +66,11 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    # Use sync engine for migrations
+    from sqlalchemy import create_engine
+    sync_url = settings.DATABASE_URL.replace("+asyncpg", "").replace("@db:", "@db:")
+    
+    connectable = create_engine(sync_url, poolclass=pool.NullPool)
 
     with connectable.connect() as connection:
         context.configure(

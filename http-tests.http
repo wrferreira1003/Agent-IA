@@ -1,0 +1,133 @@
+### Capitão IA - HTTP Tests
+### This file contains HTTP requests for testing the Capitão IA API
+### Use with REST Client extension in VS Code or similar HTTP testing tools
+
+### Variables
+@baseUrl = http://localhost:8000
+@contentType = application/json
+
+### Note: 
+### Application is running successfully on Docker
+### All endpoints tested and working correctly
+### API includes chat history persistence and AI responses
+### 
+### For Notion integration to work:
+### 1. Go to your Notion database
+### 2. Click "Share" in top right corner  
+### 3. Add your "Capitão IA" integration
+### 4. Give read/write permissions
+
+### Health Check
+GET {{baseUrl}}/
+Accept: application/json
+
+###
+
+### Test Question Processing - Valid Request
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1,
+  "pergunta": "Olá, que sabe do Petcompara?"
+}
+
+###
+
+### Test Question Processing - Another Valid Request
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 2,
+  "pergunta": "Qual é o status dos meus tickets de suporte?"
+}
+
+###
+
+### Test Question Processing - Empty Question (Should fail)
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1,
+  "pergunta": ""
+}
+
+###
+
+### Test Question Processing - Missing cliente_id (Should fail)
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "pergunta": "Esta requisição deveria falhar"
+}
+
+###
+
+### Test Question Processing - Invalid JSON (Should fail)
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": "not_a_number",
+  "pergunta": "Esta requisição deveria falhar"
+}
+
+###
+
+### Get Tickets Summary - Valid Request
+GET {{baseUrl}}/api/v1/resumo_tickets?cliente_id=1
+Accept: application/json
+
+###
+
+### Get Tickets Summary - Another Client
+GET {{baseUrl}}/api/v1/resumo_tickets?cliente_id=123
+Accept: application/json
+
+###
+
+### Get Tickets Summary - Missing cliente_id (Should fail)
+GET {{baseUrl}}/api/v1/resumo_tickets
+Accept: application/json
+
+###
+
+### Get Tickets Summary - Invalid cliente_id (Should fail)
+GET {{baseUrl}}/api/v1/resumo_tickets?cliente_id=invalid
+Accept: application/json
+
+###
+
+### Test Conversation Flow - Multiple Questions from Same Client
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 100,
+  "pergunta": "Oi, eu sou um novo cliente"
+}
+
+###
+
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 100,
+  "pergunta": "Você se lembra de mim da mensagem anterior?"
+}
+
+###
+
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 100,
+  "pergunta": "Qual foi minha primeira pergunta?"
+}
+
+###

@@ -1,0 +1,65 @@
+### Testes específicos para integração com Notion
+### IMPORTANTE: Configure primeiro no Notion:
+### 1. Abra: https://www.notion.so/Projeto-PETCOMPARA-APP-79508c00b6324c9bbecd7ff2dcc7db4a
+### 2. Clique "Share" > "Add people, emails, groups or integrations"  
+### 3. Adicione sua integração "Capitão IA"
+### 4. Defina permissões como "Full access" ou "Edit"
+
+### Variables
+@baseUrl = http://localhost:8000
+@contentType = application/json
+
+### Test Notion Search - Direct Request
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1,
+  "pergunta": "Por favor, execute a busca no meu banco de dados do Notion usando a ferramenta search_notion_pages. Quero ver todas as páginas que tenho lá."
+}
+
+###
+
+### Test Notion Page Creation
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1,
+  "pergunta": "Crie uma nova página no meu Notion com o título 'Teste do Capitão IA' e conteúdo 'Esta página foi criada automaticamente pelo Capitão IA para testar a integração.'"
+}
+
+###
+
+### Test General Notion Query
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1,
+  "pergunta": "Mostre-me o que você consegue fazer com o meu Notion. Liste minhas páginas ou crie uma nova se necessário."
+}
+
+###
+
+### Test with Portuguese Keywords
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1,
+  "pergunta": "Acesse meu Notion e me diga que documentos e páginas eu tenho salvos lá. Use suas ferramentas para isso."
+}
+
+###
+
+### Test Specific Action
+POST {{baseUrl}}/api/v1/perguntar
+Content-Type: {{contentType}}
+
+{
+  "cliente_id": 1,
+  "pergunta": "AÇÃO OBRIGATÓRIA: Use agora a função search_notion_pages() para listar meus documentos do Notion."
+}
+
+###

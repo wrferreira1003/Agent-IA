@@ -22,7 +22,7 @@ The application uses PostgreSQL with SQLAlchemy. Database configuration is handl
 ### Environment Variables
 Create a `.env` file with:
 ```
-DATABASE_URL=postgresql+asyncpg://ia_user:secret@localhost/ia_memory
+DATABASE_URL=postgresql+asyncpg://ia_user:secret@db/ia_memory
 GOOGLE_API_KEY=your_google_api_key_here
 NOTION_API_KEY=your_notion_api_key_here
 NOTION_DATABASE_ID=your_notion_database_id_here
